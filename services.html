@@ -1,0 +1,303 @@
+<html lang="en" class="h-full dark"><head><meta charset="utf-8">
+<title>Services - Ethiowebagency</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Premium web design and development agency in Addis Ababa.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
+<link rel="icon" href="images/EWA-icon.png" type="image/png">
+<link rel="stylesheet" href="styles.css">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  darkMode: 'class',
+  theme: {
+    extend: {
+      fontFamily: {
+        sans: ['Inter', 'sans-serif'],
+        display: ['Inter', 'sans-serif'],
+      },
+      animation: {
+        marquee: 'marquee 60s linear infinite',
+        'fade-in': 'fadeIn 1s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+      },
+      keyframes: {
+        marquee: {
+          '0%': { transform: 'translateX(0%)' },
+          '100%': { transform: 'translateX(-100%)' },
+        },
+        fadeIn: {
+          '0%': { opacity: '0', transform: 'translateY(20px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        }
+      }
+    }
+  }
+}
+</script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body class="antialiased text-neutral-900 bg-white dark:bg-black dark:text-white transition-colors duration-700 flex flex-col min-h-screen relative overflow-x-hidden selection:bg-emerald-500/30 selection:text-white">
+
+<!-- Noise Overlay -->
+<div class="bg-noise"></div>
+
+<!-- 3D Canvas Background -->
+<div class="fixed top-0 left-0 w-full h-[120vh] -z-10 overflow-hidden pointer-events-none transition-opacity duration-1000">
+    <div id="canvas-container" class="w-full h-full opacity-100"></div>
+    <div class="absolute inset-0 bg-gradient-to-b from-white/70 via-white/40 to-white/90 dark:from-black/70 dark:via-black/50 dark:to-black/95 pointer-events-none"></div>
+</div>
+
+<!-- Navigation -->
+<header class="fixed top-0 left-0 right-0 z-50 transition-all duration-500 backdrop-blur-md border-b border-transparent" id="navbar">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-20">
+      <!-- Logo -->
+      <a href="index.html" class="flex items-center gap-2 group z-50 transition-opacity hover:opacity-80">
+        <span class="text-xl font-bold tracking-tight font-display text-neutral-900 dark:text-white">
+          Ethio<span class="text-emerald-600 dark:text-emerald-500">web</span>agency
+        </span>
+      </a>
+
+      <!-- Desktop Nav -->
+      <div class="hidden md:flex items-center gap-1 bg-white/70 dark:bg-neutral-900/70 border border-neutral-200/50 dark:border-white/10 rounded-full px-1.5 py-1.5 shadow-sm backdrop-blur-xl transition-all duration-300">
+        <a href="index.html" class="nav-link px-5 py-2 text-xs font-medium uppercase tracking-wide text-neutral-600 dark:text-white/70 hover:text-emerald-600 dark:hover:text-emerald-400 transition-all duration-300 rounded-full">Home</a>
+        <a href="services.html" class="nav-link px-5 py-2 text-xs font-medium uppercase tracking-wide text-emerald-600 dark:text-emerald-400 bg-neutral-100 dark:bg-white/10 transition-all duration-300 rounded-full">Services</a>
+        <a href="portfolio.html" class="nav-link px-5 py-2 text-xs font-medium uppercase tracking-wide text-neutral-600 dark:text-white/70 hover:text-emerald-600 dark:hover:text-emerald-400 transition-all duration-300 rounded-full">Portfolio</a>
+        <a href="team.html" class="nav-link px-5 py-2 text-xs font-medium uppercase tracking-wide text-neutral-600 dark:text-white/70 hover:text-emerald-600 dark:hover:text-emerald-400 transition-all duration-300 rounded-full">Team</a>
+        <a href="contact.html" class="nav-link px-5 py-2 text-xs font-medium uppercase tracking-wide text-neutral-600 dark:text-white/70 hover:text-emerald-600 dark:hover:text-emerald-400 transition-all duration-300 rounded-full">Contact</a>
+      </div>
+
+      <!-- Right Actions -->
+      <div class="flex items-center gap-3 z-50">
+        <button onclick="toggleTheme()" class="p-2.5 rounded-full text-neutral-500 hover:text-neutral-900 dark:text-white/60 dark:hover:text-white bg-white/50 dark:bg-white/5 hover:bg-neutral-200 dark:hover:bg-white/10 transition-all duration-300 focus:outline-none ring-1 ring-neutral-200 dark:ring-white/10" aria-label="Toggle Theme">
+          <svg class="w-4 h-4 dark:hidden" data-lucide="moon"></svg>
+          <svg class="w-4 h-4 hidden dark:block" data-lucide="sun"></svg>
+        </button>
+
+        <button class="md:hidden p-2 text-neutral-600 dark:text-white/80 transition-transform duration-200 active:scale-90" onclick="document.getElementById('mobile-menu').classList.toggle('hidden')">
+          <svg data-lucide="menu" class="w-6 h-6"></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile Menu -->
+  <div id="mobile-menu" class="hidden md:hidden absolute top-full left-0 w-full bg-white/95 dark:bg-neutral-900/95 backdrop-blur-xl border-b border-neutral-200 dark:border-white/10 py-6 px-6 shadow-xl z-40 transition-all duration-300">
+    <div class="flex flex-col gap-6">
+      <a href="index.html" class="text-lg font-medium text-neutral-600 dark:text-white/70 hover:text-emerald-500 transition-colors">Home</a>
+      <a href="services.html" class="text-lg font-medium text-emerald-500 hover:text-emerald-500 transition-colors">Services</a>
+      <a href="portfolio.html" class="text-lg font-medium text-neutral-600 dark:text-white/70 hover:text-emerald-500 transition-colors">Portfolio</a>
+      <a href="team.html" class="text-lg font-medium text-neutral-600 dark:text-white/70 hover:text-emerald-500 transition-colors">Team</a>
+      <a href="contact.html" class="text-lg font-medium text-neutral-600 dark:text-white/70 hover:text-emerald-500 transition-colors">Contact</a>
+    </div>
+  </div>
+</header>
+
+<main class="flex-grow pt-20 min-h-screen z-10">
+  <div id="services" class="page-view active">
+    <section class="pt-32 pb-20 px-6 max-w-7xl mx-auto">
+      <div class="text-center max-w-3xl mx-auto mb-24 reveal-on-scroll">
+         <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 text-xs font-semibold uppercase tracking-wide mb-6">Comprehensive Solutions</div>
+         <h1 class="text-5xl sm:text-6xl font-display font-bold text-neutral-900 dark:text-white mb-6">Our Services</h1>
+         <p class="text-xl text-neutral-600 dark:text-white/60">We combine technical expertise with local market knowledge to deliver products that work in the Ethiopian context.</p>
+      </div>
+
+      <!-- Detailed Services Grid -->
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-32">
+         <!-- Service 1 -->
+         <div class="p-8 rounded-[2rem] bg-neutral-50 dark:bg-white/5 border border-neutral-200 dark:border-white/10 hover:border-emerald-500/50 transition-all duration-300 reveal-on-scroll delay-100 flex flex-col group hover:-translate-y-1">
+          <div class="w-12 h-12 bg-blue-500/10 rounded-lg flex items-center justify-center mb-6 text-blue-500 group-hover:scale-110 transition-transform duration-300"><svg data-lucide="code-2" width="24" height="24"></svg></div>
+          <h3 class="text-xl font-bold text-neutral-900 dark:text-white mb-3">Custom Development</h3>
+          <p class="text-neutral-600 dark:text-white/60 text-sm leading-relaxed mb-6 flex-grow">Scalable web applications built from the ground up using React, Node.js, and modern databases. Perfect for unique business logic.</p>
+          <ul class="text-sm text-neutral-500 space-y-3 mb-8 border-t border-neutral-200 dark:border-white/10 pt-6">
+            <li class="flex items-center gap-2"><div class="w-1.5 h-1.5 rounded-full bg-emerald-500"></div>React / Next.js Frontends</li>
+            <li class="flex items-center gap-2"><div class="w-1.5 h-1.5 rounded-full bg-emerald-500"></div>Secure API Integration</li>
+            <li class="flex items-center gap-2"><div class="w-1.5 h-1.5 rounded-full bg-emerald-500"></div>Database Design</li>
+          </ul>
+          <a href="contact.html" class="mt-auto w-full py-3 rounded-xl border border-neutral-300 dark:border-white/20 text-center text-sm font-semibold hover:bg-white dark:hover:bg-white/10 transition-colors">Get Quote</a>
+        </div>
+
+        <!-- Service 2 -->
+        <div class="p-8 rounded-[2rem] bg-neutral-50 dark:bg-white/5 border border-neutral-200 dark:border-white/10 hover:border-emerald-500/50 transition-all duration-300 reveal-on-scroll delay-200 flex flex-col group hover:-translate-y-1">
+          <div class="w-12 h-12 bg-purple-500/10 rounded-lg flex items-center justify-center mb-6 text-purple-500 group-hover:scale-110 transition-transform duration-300"><svg data-lucide="layout-template" width="24" height="24"></svg></div>
+          <h3 class="text-xl font-bold text-neutral-900 dark:text-white mb-3">Premium WordPress</h3>
+          <p class="text-neutral-600 dark:text-white/60 text-sm leading-relaxed mb-6 flex-grow">Easy to manage websites with custom themes. We don't use slow, bloated templates; we build efficient themes tailored to you.</p>
+          <ul class="text-sm text-neutral-500 space-y-3 mb-8 border-t border-neutral-200 dark:border-white/10 pt-6">
+            <li class="flex items-center gap-2"><div class="w-1.5 h-1.5 rounded-full bg-emerald-500"></div>Custom Theme Development</li>
+            <li class="flex items-center gap-2"><div class="w-1.5 h-1.5 rounded-full bg-emerald-500"></div>Speed Optimization</li>
+            <li class="flex items-center gap-2"><div class="w-1.5 h-1.5 rounded-full bg-emerald-500"></div>Security Hardening</li>
+          </ul>
+          <a href="contact.html" class="mt-auto w-full py-3 rounded-xl border border-neutral-300 dark:border-white/20 text-center text-sm font-semibold hover:bg-white dark:hover:bg-white/10 transition-colors">Get Quote</a>
+        </div>
+
+        <!-- Service 3 -->
+        <div class="p-8 rounded-[2rem] bg-neutral-50 dark:bg-white/5 border border-neutral-200 dark:border-white/10 hover:border-emerald-500/50 transition-all duration-300 reveal-on-scroll delay-300 flex flex-col group hover:-translate-y-1">
+          <div class="w-12 h-12 bg-emerald-500/10 rounded-lg flex items-center justify-center mb-6 text-emerald-500 group-hover:scale-110 transition-transform duration-300"><svg data-lucide="building-2" width="24" height="24"></svg></div>
+          <h3 class="text-xl font-bold text-neutral-900 dark:text-white mb-3">Hotel &amp; Real Estate</h3>
+          <p class="text-neutral-600 dark:text-white/60 text-sm leading-relaxed mb-6 flex-grow">Specialized platforms for the hospitality and property sectors, including booking engines and property management.</p>
+          <ul class="text-sm text-neutral-500 space-y-3 mb-8 border-t border-neutral-200 dark:border-white/10 pt-6">
+            <li class="flex items-center gap-2"><div class="w-1.5 h-1.5 rounded-full bg-emerald-500"></div>Direct Booking Engine</li>
+            <li class="flex items-center gap-2"><div class="w-1.5 h-1.5 rounded-full bg-emerald-500"></div>Virtual Tour Integration</li>
+            <li class="flex items-center gap-2"><div class="w-1.5 h-1.5 rounded-full bg-emerald-500"></div>Channel Manager Sync</li>
+          </ul>
+          <a href="contact.html" class="mt-auto w-full py-3 rounded-xl border border-neutral-300 dark:border-white/20 text-center text-sm font-semibold hover:bg-white dark:hover:bg-white/10 transition-colors">Get Quote</a>
+        </div>
+        
+         <!-- Service 4 -->
+         <div class="p-8 rounded-[2rem] bg-neutral-50 dark:bg-white/5 border border-neutral-200 dark:border-white/10 hover:border-emerald-500/50 transition-all duration-300 reveal-on-scroll delay-100 flex flex-col group hover:-translate-y-1">
+          <div class="w-12 h-12 bg-orange-500/10 rounded-lg flex items-center justify-center mb-6 text-orange-500 group-hover:scale-110 transition-transform duration-300"><svg data-lucide="shopping-cart" width="24" height="24"></svg></div>
+          <h3 class="text-xl font-bold text-neutral-900 dark:text-white mb-3">E-Commerce</h3>
+          <p class="text-neutral-600 dark:text-white/60 text-sm leading-relaxed mb-6 flex-grow">Robust online stores that allow you to sell products locally and internationally. Integrated with local payment gateways.</p>
+          <ul class="text-sm text-neutral-500 space-y-3 mb-8 border-t border-neutral-200 dark:border-white/10 pt-6">
+            <li class="flex items-center gap-2"><div class="w-1.5 h-1.5 rounded-full bg-emerald-500"></div>Inventory Management</li>
+            <li class="flex items-center gap-2"><div class="w-1.5 h-1.5 rounded-full bg-emerald-500"></div>Telebirr &amp; Chapa Pay</li>
+            <li class="flex items-center gap-2"><div class="w-1.5 h-1.5 rounded-full bg-emerald-500"></div>WooCommerce / Shopify</li>
+          </ul>
+          <a href="contact.html" class="mt-auto w-full py-3 rounded-xl border border-neutral-300 dark:border-white/20 text-center text-sm font-semibold hover:bg-white dark:hover:bg-white/10 transition-colors">Get Quote</a>
+        </div>
+
+         <!-- Service 5 -->
+         <div class="p-8 rounded-[2rem] bg-neutral-50 dark:bg-white/5 border border-neutral-200 dark:border-white/10 hover:border-emerald-500/50 transition-all duration-300 reveal-on-scroll delay-200 flex flex-col group hover:-translate-y-1">
+          <div class="w-12 h-12 bg-pink-500/10 rounded-lg flex items-center justify-center mb-6 text-pink-500 group-hover:scale-110 transition-transform duration-300"><svg data-lucide="pen-tool" width="24" height="24"></svg></div>
+          <h3 class="text-xl font-bold text-neutral-900 dark:text-white mb-3">UI/UX Design</h3>
+          <p class="text-neutral-600 dark:text-white/60 text-sm leading-relaxed mb-6 flex-grow">World-class interface design that improves user engagement and conversion rates. We design for usability and aesthetics.</p>
+           <ul class="text-sm text-neutral-500 space-y-3 mb-8 border-t border-neutral-200 dark:border-white/10 pt-6">
+            <li class="flex items-center gap-2"><div class="w-1.5 h-1.5 rounded-full bg-emerald-500"></div>Figma Prototyping</li>
+            <li class="flex items-center gap-2"><div class="w-1.5 h-1.5 rounded-full bg-emerald-500"></div>User Research</li>
+            <li class="flex items-center gap-2"><div class="w-1.5 h-1.5 rounded-full bg-emerald-500"></div>Brand Identity</li>
+          </ul>
+          <a href="contact.html" class="mt-auto w-full py-3 rounded-xl border border-neutral-300 dark:border-white/20 text-center text-sm font-semibold hover:bg-white dark:hover:bg-white/10 transition-colors">Get Quote</a>
+        </div>
+
+         <!-- Service 6 -->
+         <div class="p-8 rounded-[2rem] bg-neutral-50 dark:bg-white/5 border border-neutral-200 dark:border-white/10 hover:border-emerald-500/50 transition-all duration-300 reveal-on-scroll delay-300 flex flex-col group hover:-translate-y-1">
+          <div class="w-12 h-12 bg-indigo-500/10 rounded-lg flex items-center justify-center mb-6 text-indigo-500 group-hover:scale-110 transition-transform duration-300"><svg data-lucide="search" width="24" height="24"></svg></div>
+          <h3 class="text-xl font-bold text-neutral-900 dark:text-white mb-3">SEO &amp; Marketing</h3>
+          <p class="text-neutral-600 dark:text-white/60 text-sm leading-relaxed mb-6 flex-grow">Rank higher on Google and reach more customers. We optimize your site for keywords relevant to the Ethiopian market.</p>
+           <ul class="text-sm text-neutral-500 space-y-3 mb-8 border-t border-neutral-200 dark:border-white/10 pt-6">
+            <li class="flex items-center gap-2"><div class="w-1.5 h-1.5 rounded-full bg-emerald-500"></div>Keyword Research</li>
+            <li class="flex items-center gap-2"><div class="w-1.5 h-1.5 rounded-full bg-emerald-500"></div>Content Strategy</li>
+            <li class="flex items-center gap-2"><div class="w-1.5 h-1.5 rounded-full bg-emerald-500"></div>Performance Tuning</li>
+          </ul>
+          <a href="contact.html" class="mt-auto w-full py-3 rounded-xl border border-neutral-300 dark:border-white/20 text-center text-sm font-semibold hover:bg-white dark:hover:bg-white/10 transition-colors">Get Quote</a>
+        </div>
+      </div>
+      
+      <!-- Technologies Section -->
+      <section class="mb-32 reveal-on-scroll">
+          <h2 class="text-2xl font-bold text-center text-neutral-900 dark:text-white mb-10">Our Technology Stack</h2>
+          <div class="flex flex-wrap justify-center gap-8 md:gap-16 opacity-70 hover:opacity-100 grayscale hover:grayscale-0 transition-all duration-500">
+              <div class="flex flex-col items-center gap-2 transition-transform hover:scale-110 duration-300"><svg data-lucide="code" class="w-8 h-8"></svg><span class="text-xs font-semibold">React</span></div>
+              <div class="flex flex-col items-center gap-2 transition-transform hover:scale-110 duration-300"><svg data-lucide="server" class="w-8 h-8"></svg><span class="text-xs font-semibold">Node.js</span></div>
+              <div class="flex flex-col items-center gap-2 transition-transform hover:scale-110 duration-300"><svg data-lucide="database" class="w-8 h-8"></svg><span class="text-xs font-semibold">PostgreSQL</span></div>
+              <div class="flex flex-col items-center gap-2 transition-transform hover:scale-110 duration-300"><svg data-lucide="layout" class="w-8 h-8"></svg><span class="text-xs font-semibold">Next.js</span></div>
+              <div class="flex flex-col items-center gap-2 transition-transform hover:scale-110 duration-300"><svg data-lucide="file-code" class="w-8 h-8"></svg><span class="text-xs font-semibold">TypeScript</span></div>
+              <div class="flex flex-col items-center gap-2 transition-transform hover:scale-110 duration-300"><svg data-lucide="box" class="w-8 h-8"></svg><span class="text-xs font-semibold">Docker</span></div>
+          </div>
+      </section>
+
+      <!-- Packages -->
+      <section class="reveal-on-scroll">
+          <h2 class="text-3xl font-display font-bold text-center text-neutral-900 dark:text-white mb-4">Service Packages</h2>
+          <p class="text-center text-neutral-500 mb-12">Transparent starting points for standard projects.</p>
+          <div class="grid md:grid-cols-3 gap-6">
+              <div class="border border-neutral-200 dark:border-white/10 rounded-3xl p-8 bg-white dark:bg-black hover:border-emerald-500/30 transition-all duration-300 hover:-translate-y-1">
+                  <h3 class="text-lg font-bold text-neutral-900 dark:text-white">Starter</h3>
+                  <div class="text-3xl font-bold mt-4 mb-2">15,000 <span class="text-sm font-normal text-neutral-500">ETB</span></div>
+                  <p class="text-sm text-neutral-500 mb-6">Perfect for small businesses needing a presence.</p>
+                  <ul class="space-y-3 text-sm text-neutral-600 dark:text-white/60 mb-8">
+                      <li class="flex gap-2"><svg data-lucide="check" class="w-4 h-4 text-emerald-500"></svg> 5 Page Website</li>
+                      <li class="flex gap-2"><svg data-lucide="check" class="w-4 h-4 text-emerald-500"></svg> Mobile Responsive</li>
+                      <li class="flex gap-2"><svg data-lucide="check" class="w-4 h-4 text-emerald-500"></svg> Contact Form</li>
+                      <li class="flex gap-2"><svg data-lucide="check" class="w-4 h-4 text-emerald-500"></svg> 1 Month Support</li>
+                  </ul>
+                  <a href="contact.html" class="block w-full py-3 rounded-xl bg-neutral-100 dark:bg-white/10 text-center font-semibold text-sm hover:bg-neutral-200 dark:hover:bg-white/20 transition-colors">Select</a>
+              </div>
+              <div class="border-2 border-emerald-500 rounded-3xl p-8 bg-white dark:bg-neutral-900 relative shadow-2xl shadow-emerald-500/10 hover:-translate-y-1 transition-transform duration-300">
+                  <div class="absolute top-0 right-0 bg-emerald-500 text-white text-xs font-bold px-3 py-1 rounded-bl-xl rounded-tr-2xl">POPULAR</div>
+                  <h3 class="text-lg font-bold text-neutral-900 dark:text-white">Business</h3>
+                  <div class="text-3xl font-bold mt-4 mb-2">40,000 <span class="text-sm font-normal text-neutral-500">ETB</span></div>
+                  <p class="text-sm text-neutral-500 mb-6">For growing companies needing more features.</p>
+                  <ul class="space-y-3 text-sm text-neutral-600 dark:text-white/60 mb-8">
+                      <li class="flex gap-2"><svg data-lucide="check" class="w-4 h-4 text-emerald-500"></svg> Up to 10 Pages</li>
+                      <li class="flex gap-2"><svg data-lucide="check" class="w-4 h-4 text-emerald-500"></svg> CMS Integration</li>
+                      <li class="flex gap-2"><svg data-lucide="check" class="w-4 h-4 text-emerald-500"></svg> Basic SEO Setup</li>
+                      <li class="flex gap-2"><svg data-lucide="check" class="w-4 h-4 text-emerald-500"></svg> 3 Months Support</li>
+                  </ul>
+                  <a href="contact.html" class="block w-full py-3 rounded-xl bg-emerald-500 text-white text-center font-semibold text-sm hover:bg-emerald-600 transition-colors shadow-lg shadow-emerald-500/30">Select</a>
+              </div>
+              <div class="border border-neutral-200 dark:border-white/10 rounded-3xl p-8 bg-white dark:bg-black hover:border-emerald-500/30 transition-all duration-300 hover:-translate-y-1">
+                  <h3 class="text-lg font-bold text-neutral-900 dark:text-white">Enterprise</h3>
+                  <div class="text-3xl font-bold mt-4 mb-2">Custom <span class="text-sm font-normal text-neutral-500">Quote</span></div>
+                  <p class="text-sm text-neutral-500 mb-6">Complex systems for large organizations.</p>
+                  <ul class="space-y-3 text-sm text-neutral-600 dark:text-white/60 mb-8">
+                      <li class="flex gap-2"><svg data-lucide="check" class="w-4 h-4 text-emerald-500"></svg> Custom Web App</li>
+                      <li class="flex gap-2"><svg data-lucide="check" class="w-4 h-4 text-emerald-500"></svg> E-Commerce / Booking</li>
+                      <li class="flex gap-2"><svg data-lucide="check" class="w-4 h-4 text-emerald-500"></svg> API Integrations</li>
+                      <li class="flex gap-2"><svg data-lucide="check" class="w-4 h-4 text-emerald-500"></svg> Priority Support</li>
+                  </ul>
+                  <a href="contact.html" class="block w-full py-3 rounded-xl bg-neutral-100 dark:bg-white/10 text-center font-semibold text-sm hover:bg-neutral-200 dark:hover:bg-white/20 transition-colors">Contact Us</a>
+              </div>
+          </div>
+      </section>
+
+    </section>
+  </div>
+</main>
+
+<!-- Footer -->
+<footer class="border-t border-neutral-200 dark:border-white/10 bg-white dark:bg-black py-20 relative z-10">
+  <div class="max-w-7xl mx-auto px-6 grid gap-12 md:grid-cols-4">
+    <div class="md:col-span-2">
+      <div class="flex items-center gap-2 mb-6">
+        <span class="text-2xl font-bold tracking-tight text-neutral-900 dark:text-white font-display">Ethio<span class="text-emerald-500">web</span>agency</span>
+      </div>
+      <p class="text-sm text-neutral-500 dark:text-white/50 max-w-sm leading-relaxed mb-8">The premier web development agency for Ethiopia's hospitality, real estate, and education sectors. Located Debre Zeyit, Ethiopia.</p>
+      <div class="flex gap-4">
+        <a href="#" class="w-10 h-10 rounded-full bg-neutral-100 dark:bg-white/10 flex items-center justify-center text-neutral-600 dark:text-white/60 hover:bg-emerald-500 hover:text-white transition-all duration-300 hover:-translate-y-1"><svg class="w-5 h-5" data-lucide="facebook"></svg></a>
+        <a href="#" class="w-10 h-10 rounded-full bg-neutral-100 dark:bg-white/10 flex items-center justify-center text-neutral-600 dark:text-white/60 hover:bg-emerald-500 hover:text-white transition-all duration-300 hover:-translate-y-1"><svg class="w-5 h-5" data-lucide="twitter"></svg></a>
+        <a href="#" class="w-10 h-10 rounded-full bg-neutral-100 dark:bg-white/10 flex items-center justify-center text-neutral-600 dark:text-white/60 hover:bg-emerald-500 hover:text-white transition-all duration-300 hover:-translate-y-1"><svg class="w-5 h-5" data-lucide="linkedin"></svg></a>
+        <a href="#" class="w-10 h-10 rounded-full bg-neutral-100 dark:bg-white/10 flex items-center justify-center text-neutral-600 dark:text-white/60 hover:bg-emerald-500 hover:text-white transition-all duration-300 hover:-translate-y-1"><svg class="w-5 h-5" data-lucide="instagram"></svg></a>
+      </div>
+    </div>
+    <div>
+      <h4 class="text-sm font-bold text-neutral-900 dark:text-white mb-6 uppercase tracking-wider">Company</h4>
+      <ul class="space-y-3 text-sm text-neutral-500 dark:text-white/60">
+        <li><a href="index.html" class="hover:text-emerald-500 transition-colors">Home</a></li>
+        <li><a href="services.html" class="hover:text-emerald-500 transition-colors">Services</a></li>
+        <li><a href="portfolio.html" class="hover:text-emerald-500 transition-colors">Portfolio</a></li>
+        <li><a href="team.html" class="hover:text-emerald-500 transition-colors">Team</a></li>
+        <li><a href="contact.html" class="hover:text-emerald-500 transition-colors">Contact</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4 class="text-sm font-bold text-neutral-900 dark:text-white mb-6 uppercase tracking-wider">Services</h4>
+      <ul class="space-y-3 text-sm text-neutral-500 dark:text-white/60">
+        <li><a href="services.html" class="hover:text-emerald-500 transition-colors">Web Development</a></li>
+        <li><a href="services.html" class="hover:text-emerald-500 transition-colors">Hotel Booking Engines</a></li>
+        <li><a href="services.html" class="hover:text-emerald-500 transition-colors">Real Estate Platforms</a></li>
+        <li><a href="services.html" class="hover:text-emerald-500 transition-colors">E-Commerce</a></li>
+        <li><a href="services.html" class="hover:text-emerald-500 transition-colors">SEO &amp; Marketing</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="max-w-7xl mx-auto px-6 mt-16 pt-8 border-t border-neutral-200 dark:border-white/10 flex flex-col md:flex-row justify-between items-center gap-4">
+    <p class="text-xs text-center text-neutral-400 dark:text-white/30">© 2026 Ethiowebagency. All rights reserved.</p>
+    <div class="flex gap-6">
+        <a href="#" class="text-xs text-neutral-400 hover:text-white transition-colors">Privacy Policy</a>
+        <a href="#" class="text-xs text-neutral-400 hover:text-white transition-colors">Terms of Service</a>
+    </div>
+  </div>
+</footer>
+
+<!-- Scroll to Top Button -->
+<button id="scrollToTopBtn" class="fixed bottom-6 right-6 z-50 p-3 rounded-full bg-neutral-900 dark:bg-emerald-500 text-white dark:text-white shadow-xl translate-y-20 opacity-0 transition-all duration-500 hover:-translate-y-1 hover:shadow-2xl focus:outline-none" aria-label="Scroll to top">
+  <svg data-lucide="arrow-up" class="w-5 h-5"></svg>
+</button>
+
+<script src="scripts.js"></script>
+
+</body></html>

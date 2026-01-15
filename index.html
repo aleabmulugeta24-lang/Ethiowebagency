@@ -1,0 +1,346 @@
+<html lang="en" class="h-full dark"><head><meta charset="utf-8">
+<title>Ethiowebagency — Digital Solutions</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Premium web design and development agency in Addis Ababa.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<link rel="icon" href="images/EWA-icon.png" type="image/png">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  darkMode: 'class',
+  theme: {
+    extend: {
+      fontFamily: {
+        sans: ['Inter', 'sans-serif'],
+        display: ['Inter', 'sans-serif'],
+      },
+      animation: {
+        marquee: 'marquee 60s linear infinite',
+        'fade-in': 'fadeIn 1s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+      },
+      keyframes: {
+        marquee: {
+          '0%': { transform: 'translateX(0%)' },
+          '100%': { transform: 'translateX(-100%)' },
+        },
+        fadeIn: {
+          '0%': { opacity: '0', transform: 'translateY(20px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        }
+      }
+    }
+  }
+}
+</script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body class="antialiased text-neutral-900 bg-white dark:bg-black dark:text-white transition-colors duration-700 flex flex-col min-h-screen relative overflow-x-hidden selection:bg-emerald-500/30 selection:text-white">
+
+<!-- Noise Overlay -->
+<div class="bg-noise"></div>
+
+<!-- 3D Canvas Background -->
+<div class="fixed top-0 left-0 w-full h-[120vh] -z-10 overflow-hidden pointer-events-none transition-opacity duration-1000">
+    <div id="canvas-container" class="w-full h-full opacity-100"></div>
+    <div class="absolute inset-0 bg-gradient-to-b from-white/70 via-white/40 to-white/90 dark:from-black/70 dark:via-black/50 dark:to-black/95 pointer-events-none"></div>
+</div>
+
+<!-- Navigation -->
+<header class="fixed top-0 left-0 right-0 z-50 transition-all duration-500 backdrop-blur-md border-b border-transparent" id="navbar">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-20">
+      <!-- Logo -->
+      <a href="index.html" class="flex items-center gap-2 group z-50 transition-opacity hover:opacity-80">
+        <span class="text-xl font-bold tracking-tight font-display text-neutral-900 dark:text-white">
+          Ethio<span class="text-emerald-600 dark:text-emerald-500">web</span>agency
+        </span>
+      </a>
+
+      <!-- Desktop Nav -->
+      <div class="hidden md:flex items-center gap-1 bg-white/70 dark:bg-neutral-900/70 border border-neutral-200/50 dark:border-white/10 rounded-full px-1.5 py-1.5 shadow-sm backdrop-blur-xl transition-all duration-300">
+        <a href="index.html" class="nav-link px-5 py-2 text-xs font-medium uppercase tracking-wide text-emerald-600 dark:text-emerald-400 bg-neutral-100 dark:bg-white/10 transition-all duration-300 rounded-full">Home</a>
+        <a href="services.html" class="nav-link px-5 py-2 text-xs font-medium uppercase tracking-wide text-neutral-600 dark:text-white/70 hover:text-emerald-600 dark:hover:text-emerald-400 transition-all duration-300 rounded-full">Services</a>
+        <a href="portfolio.html" class="nav-link px-5 py-2 text-xs font-medium uppercase tracking-wide text-neutral-600 dark:text-white/70 hover:text-emerald-600 dark:hover:text-emerald-400 transition-all duration-300 rounded-full">Portfolio</a>
+        <a href="team.html" class="nav-link px-5 py-2 text-xs font-medium uppercase tracking-wide text-neutral-600 dark:text-white/70 hover:text-emerald-600 dark:hover:text-emerald-400 transition-all duration-300 rounded-full">Team</a>
+        <a href="contact.html" class="nav-link px-5 py-2 text-xs font-medium uppercase tracking-wide text-neutral-600 dark:text-white/70 hover:text-emerald-600 dark:hover:text-emerald-400 transition-all duration-300 rounded-full">Contact</a>
+      </div>
+
+      <!-- Right Actions -->
+      <div class="flex items-center gap-3 z-50">
+        <button onclick="toggleTheme()" class="p-2.5 rounded-full text-neutral-500 hover:text-neutral-900 dark:text-white/60 dark:hover:text-white bg-white/50 dark:bg-white/5 hover:bg-neutral-200 dark:hover:bg-white/10 transition-all duration-300 focus:outline-none ring-1 ring-neutral-200 dark:ring-white/10" aria-label="Toggle Theme">
+          <svg class="w-4 h-4 dark:hidden" data-lucide="moon"></svg>
+          <svg class="w-4 h-4 hidden dark:block" data-lucide="sun"></svg>
+        </button>
+
+        <button class="md:hidden p-2 text-neutral-600 dark:text-white/80 transition-transform duration-200 active:scale-90" onclick="document.getElementById('mobile-menu').classList.toggle('hidden')">
+          <svg data-lucide="menu" class="w-6 h-6"></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile Menu -->
+  <div id="mobile-menu" class="hidden md:hidden absolute top-full left-0 w-full bg-white/95 dark:bg-neutral-900/95 backdrop-blur-xl border-b border-neutral-200 dark:border-white/10 py-6 px-6 shadow-xl z-40 transition-all duration-300">
+    <div class="flex flex-col gap-6">
+      <a href="index.html" class="text-lg font-medium text-emerald-500 hover:text-emerald-500 transition-colors">Home</a>
+      <a href="services.html" class="text-lg font-medium text-neutral-600 dark:text-white/70 hover:text-emerald-500 transition-colors">Services</a>
+      <a href="portfolio.html" class="text-lg font-medium text-neutral-600 dark:text-white/70 hover:text-emerald-500 transition-colors">Portfolio</a>
+      <a href="team.html" class="text-lg font-medium text-neutral-600 dark:text-white/70 hover:text-emerald-500 transition-colors">Team</a>
+      <a href="contact.html" class="text-lg font-medium text-neutral-600 dark:text-white/70 hover:text-emerald-500 transition-colors">Contact</a>
+    </div>
+  </div>
+</header>
+
+<main class="flex-grow pt-20 min-h-screen z-10">
+  <div id="home" class="page-view active">
+    <!-- Hero Section -->
+    <section class="relative pt-24 pb-24 sm:pt-36 sm:pb-40 px-6 text-center max-w-6xl mx-auto">
+      <div class="reveal-on-scroll">
+        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-xs font-semibold uppercase tracking-wide mb-10 hover:bg-emerald-500/20 transition-colors cursor-default select-none">
+          <span class="relative flex h-2 w-2">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+          </span>
+          #1 WEB AGENCY IN ETHIOPIA
+        </div>
+        <h1 class="text-5xl sm:text-7xl md:text-8xl tracking-tighter font-display font-semibold text-neutral-900 dark:text-white mb-10 leading-[1.05]">
+          Digital Excellence for <br class="hidden sm:block"> <span class="bg-clip-text text-transparent bg-gradient-to-r from-emerald-500 to-blue-500 animate-gradient-x">Forward Thinking</span> Brands
+        </h1>
+        <p class="text-lg sm:text-xl text-neutral-600 dark:text-white/60 max-w-2xl mx-auto mb-12 font-light leading-relaxed">
+          We engineer high-performance websites and digital systems. From luxury hotels in Bole to Real Estate developments in Sarbet, we digitize Ethiopia.
+        </p>
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-5">
+          <a href="contact.html" class="w-full sm:w-auto group relative inline-flex items-center justify-center bg-neutral-900 dark:bg-white text-white dark:text-black h-14 px-8 rounded-full text-sm font-semibold transition-all duration-300 hover:scale-[1.02] hover:shadow-xl hover:shadow-emerald-500/20 active:scale-[0.98]">
+            <span>Start Project</span>
+            <svg class="ml-2 w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" data-lucide="arrow-right"></svg>
+          </a>
+          <a href="portfolio.html" class="w-full sm:w-auto inline-flex items-center justify-center bg-transparent border border-neutral-300 dark:border-white/20 text-neutral-900 dark:text-white h-14 px-8 rounded-full text-sm font-semibold hover:bg-neutral-100 dark:hover:bg-white/10 transition-all duration-300 active:scale-[0.98]">
+            Our Portfolio
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Continuous Marquee -->
+    <section class="border-y border-neutral-200/50 dark:border-white/5 py-10 overflow-hidden bg-neutral-50/50 dark:bg-white/[0.02] backdrop-blur-sm">
+       <div class="relative flex overflow-hidden mask-linear-gradient group">
+        <!-- Inner wrapper for smooth scrolling -->
+        <div class="flex shrink-0 animate-marquee items-center gap-10 px-5 group-hover:[animation-play-state:paused]">
+             <!-- Loop 1 Items -->
+             <div class="flex items-center gap-3 px-5 py-2.5 rounded-full bg-white dark:bg-white/5 border border-neutral-200 dark:border-white/10 shadow-sm text-neutral-600 dark:text-neutral-300 text-xs font-semibold uppercase tracking-wider hover:border-emerald-500/50 transition-colors cursor-default"><svg data-lucide="map-pin" class="w-4 h-4 text-emerald-500"></svg> Addis Ababa</div>
+             <div class="flex items-center gap-3 px-5 py-2.5 rounded-full bg-white dark:bg-white/5 border border-neutral-200 dark:border-white/10 shadow-sm text-neutral-600 dark:text-neutral-300 text-xs font-semibold uppercase tracking-wider hover:border-blue-500/50 transition-colors cursor-default"><svg data-lucide="palette" class="w-4 h-4 text-blue-500"></svg> Web Design</div>
+             <div class="flex items-center gap-3 px-5 py-2.5 rounded-full bg-white dark:bg-white/5 border border-neutral-200 dark:border-white/10 shadow-sm text-neutral-600 dark:text-neutral-300 text-xs font-semibold uppercase tracking-wider hover:border-purple-500/50 transition-colors cursor-default"><svg data-lucide="code-2" class="w-4 h-4 text-purple-500"></svg> Development</div>
+             <div class="flex items-center gap-3 px-5 py-2.5 rounded-full bg-white dark:bg-white/5 border border-neutral-200 dark:border-white/10 shadow-sm text-neutral-600 dark:text-neutral-300 text-xs font-semibold uppercase tracking-wider hover:border-orange-500/50 transition-colors cursor-default"><svg data-lucide="search" class="w-4 h-4 text-orange-500"></svg> SEO Strategy</div>
+             <div class="flex items-center gap-3 px-5 py-2.5 rounded-full bg-white dark:bg-white/5 border border-neutral-200 dark:border-white/10 shadow-sm text-neutral-600 dark:text-neutral-300 text-xs font-semibold uppercase tracking-wider hover:border-pink-500/50 transition-colors cursor-default"><svg data-lucide="shopping-bag" class="w-4 h-4 text-pink-500"></svg> E-Commerce</div>
+             <div class="flex items-center gap-3 px-5 py-2.5 rounded-full bg-white dark:bg-white/5 border border-neutral-200 dark:border-white/10 shadow-sm text-neutral-600 dark:text-neutral-300 text-xs font-semibold uppercase tracking-wider hover:border-yellow-500/50 transition-colors cursor-default"><svg data-lucide="zap" class="w-4 h-4 text-yellow-500"></svg> Branding</div>
+             <div class="flex items-center gap-3 px-5 py-2.5 rounded-full bg-white dark:bg-white/5 border border-neutral-200 dark:border-white/10 shadow-sm text-neutral-600 dark:text-neutral-300 text-xs font-semibold uppercase tracking-wider hover:border-indigo-500/50 transition-colors cursor-default"><svg data-lucide="smartphone" class="w-4 h-4 text-indigo-500"></svg> Mobile Apps</div>
+             <div class="flex items-center gap-3 px-5 py-2.5 rounded-full bg-white dark:bg-white/5 border border-neutral-200 dark:border-white/10 shadow-sm text-neutral-600 dark:text-neutral-300 text-xs font-semibold uppercase tracking-wider hover:border-cyan-500/50 transition-colors cursor-default"><svg data-lucide="globe" class="w-4 h-4 text-cyan-500"></svg> Hosting</div>
+        </div>
+        <!-- Loop 2 (Duplicate) -->
+        <div aria-hidden="true" class="flex shrink-0 animate-marquee items-center gap-10 px-5 group-hover:[animation-play-state:paused]">
+             <div class="flex items-center gap-3 px-5 py-2.5 rounded-full bg-white dark:bg-white/5 border border-neutral-200 dark:border-white/10 shadow-sm text-neutral-600 dark:text-neutral-300 text-xs font-semibold uppercase tracking-wider hover:border-emerald-500/50 transition-colors cursor-default"><svg data-lucide="map-pin" class="w-4 h-4 text-emerald-500"></svg> Addis Ababa</div>
+             <div class="flex items-center gap-3 px-5 py-2.5 rounded-full bg-white dark:bg-white/5 border border-neutral-200 dark:border-white/10 shadow-sm text-neutral-600 dark:text-neutral-300 text-xs font-semibold uppercase tracking-wider hover:border-blue-500/50 transition-colors cursor-default"><svg data-lucide="palette" class="w-4 h-4 text-blue-500"></svg> Web Design</div>
+             <div class="flex items-center gap-3 px-5 py-2.5 rounded-full bg-white dark:bg-white/5 border border-neutral-200 dark:border-white/10 shadow-sm text-neutral-600 dark:text-neutral-300 text-xs font-semibold uppercase tracking-wider hover:border-purple-500/50 transition-colors cursor-default"><svg data-lucide="code-2" class="w-4 h-4 text-purple-500"></svg> Development</div>
+             <div class="flex items-center gap-3 px-5 py-2.5 rounded-full bg-white dark:bg-white/5 border border-neutral-200 dark:border-white/10 shadow-sm text-neutral-600 dark:text-neutral-300 text-xs font-semibold uppercase tracking-wider hover:border-orange-500/50 transition-colors cursor-default"><svg data-lucide="search" class="w-4 h-4 text-orange-500"></svg> SEO Strategy</div>
+             <div class="flex items-center gap-3 px-5 py-2.5 rounded-full bg-white dark:bg-white/5 border border-neutral-200 dark:border-white/10 shadow-sm text-neutral-600 dark:text-neutral-300 text-xs font-semibold uppercase tracking-wider hover:border-pink-500/50 transition-colors cursor-default"><svg data-lucide="shopping-bag" class="w-4 h-4 text-pink-500"></svg> E-Commerce</div>
+             <div class="flex items-center gap-3 px-5 py-2.5 rounded-full bg-white dark:bg-white/5 border border-neutral-200 dark:border-white/10 shadow-sm text-neutral-600 dark:text-neutral-300 text-xs font-semibold uppercase tracking-wider hover:border-yellow-500/50 transition-colors cursor-default"><svg data-lucide="zap" class="w-4 h-4 text-yellow-500"></svg> Branding</div>
+             <div class="flex items-center gap-3 px-5 py-2.5 rounded-full bg-white dark:bg-white/5 border border-neutral-200 dark:border-white/10 shadow-sm text-neutral-600 dark:text-neutral-300 text-xs font-semibold uppercase tracking-wider hover:border-indigo-500/50 transition-colors cursor-default"><svg data-lucide="smartphone" class="w-4 h-4 text-indigo-500"></svg> Mobile Apps</div>
+             <div class="flex items-center gap-3 px-5 py-2.5 rounded-full bg-white dark:bg-white/5 border border-neutral-200 dark:border-white/10 shadow-sm text-neutral-600 dark:text-neutral-300 text-xs font-semibold uppercase tracking-wider hover:border-cyan-500/50 transition-colors cursor-default"><svg data-lucide="globe" class="w-4 h-4 text-cyan-500"></svg> Hosting</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Services Preview -->
+    <section class="py-32 px-6 bg-neutral-50/30 dark:bg-white/5 border-b border-neutral-200 dark:border-white/5">
+      <div class="max-w-7xl mx-auto">
+        <div class="flex flex-col md:flex-row justify-between items-end mb-20 reveal-on-scroll">
+          <div class="max-w-2xl">
+            <h2 class="text-sm font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest mb-4">Our Expertise</h2>
+            <h3 class="text-4xl sm:text-5xl font-display font-semibold text-neutral-900 dark:text-white leading-tight">Solutions designed for <br>growth and impact.</h3>
+          </div>
+          <a href="services.html" class="hidden md:inline-flex items-center text-sm font-semibold text-neutral-900 dark:text-white border-b border-neutral-300 dark:border-white/30 hover:border-emerald-500 pb-1 transition-colors mt-6 md:mt-0 group">
+            Explore All Services <svg class="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" data-lucide="arrow-right"></svg>
+          </a>
+        </div>
+        <div class="grid md:grid-cols-3 gap-8">
+           <!-- Card 1 -->
+           <div class="p-10 rounded-[2rem] bg-white dark:bg-black border border-neutral-100 dark:border-white/10 shadow-xl shadow-neutral-200/50 dark:shadow-black/50 hover:shadow-2xl hover:-translate-y-1 transition-all duration-500 reveal-on-scroll delay-100 group">
+             <div class="w-14 h-14 bg-blue-500/10 rounded-2xl flex items-center justify-center mb-8 text-blue-500 group-hover:scale-110 transition-transform duration-500"><svg data-lucide="layout-template" class="w-7 h-7"></svg></div>
+             <h4 class="text-2xl font-bold text-neutral-900 dark:text-white mb-3">Custom Websites</h4>
+             <p class="text-neutral-500 dark:text-white/60 text-sm leading-relaxed mb-8">Tailored websites built with React &amp; Next.js. Faster, more secure, and better for SEO than standard templates.</p>
+             <ul class="space-y-3 mb-8 text-sm text-neutral-500 dark:text-white/50">
+                <li class="flex items-center gap-2"><svg class="w-4 h-4 text-emerald-500" data-lucide="check-circle-2"></svg> Fast Loading Speed</li>
+                <li class="flex items-center gap-2"><svg class="w-4 h-4 text-emerald-500" data-lucide="check-circle-2"></svg> Mobile Responsive</li>
+             </ul>
+           </div>
+           <!-- Card 2 -->
+           <div class="p-10 rounded-[2rem] bg-white dark:bg-black border border-neutral-100 dark:border-white/10 shadow-xl shadow-neutral-200/50 dark:shadow-black/50 hover:shadow-2xl hover:-translate-y-1 transition-all duration-500 reveal-on-scroll delay-200 group">
+             <div class="w-14 h-14 bg-emerald-500/10 rounded-2xl flex items-center justify-center mb-8 text-emerald-500 group-hover:scale-110 transition-transform duration-500"><svg data-lucide="building-2" class="w-7 h-7"></svg></div>
+             <h4 class="text-2xl font-bold text-neutral-900 dark:text-white mb-3">Business Systems</h4>
+             <p class="text-neutral-500 dark:text-white/60 text-sm leading-relaxed mb-8">Complex platforms for Hotels, Real Estate, and Schools. Includes dashboards, payments, and booking engines.</p>
+             <ul class="space-y-3 mb-8 text-sm text-neutral-500 dark:text-white/50">
+                <li class="flex items-center gap-2"><svg class="w-4 h-4 text-emerald-500" data-lucide="check-circle-2"></svg> Admin Dashboards</li>
+                <li class="flex items-center gap-2"><svg class="w-4 h-4 text-emerald-500" data-lucide="check-circle-2"></svg> Telebirr/Chapa Integration</li>
+             </ul>
+           </div>
+           <!-- Card 3 -->
+           <div class="p-10 rounded-[2rem] bg-white dark:bg-black border border-neutral-100 dark:border-white/10 shadow-xl shadow-neutral-200/50 dark:shadow-black/50 hover:shadow-2xl hover:-translate-y-1 transition-all duration-500 reveal-on-scroll delay-300 group">
+             <div class="w-14 h-14 bg-purple-500/10 rounded-2xl flex items-center justify-center mb-8 text-purple-500 group-hover:scale-110 transition-transform duration-500"><svg data-lucide="smartphone" class="w-7 h-7"></svg></div>
+             <h4 class="text-2xl font-bold text-neutral-900 dark:text-white mb-3">Mobile Apps</h4>
+             <p class="text-neutral-500 dark:text-white/60 text-sm leading-relaxed mb-8">Native and Cross-platform mobile applications for iOS and Android to connect with customers on the go.</p>
+             <ul class="space-y-3 mb-8 text-sm text-neutral-500 dark:text-white/50">
+                <li class="flex items-center gap-2"><svg class="w-4 h-4 text-emerald-500" data-lucide="check-circle-2"></svg> iOS &amp; Android</li>
+                <li class="flex items-center gap-2"><svg class="w-4 h-4 text-emerald-500" data-lucide="check-circle-2"></svg> Push Notifications</li>
+             </ul>
+           </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Process Section -->
+    <section class="py-32 px-6 border-b border-neutral-200 dark:border-white/5">
+        <div class="max-w-7xl mx-auto">
+             <div class="text-center mb-24 reveal-on-scroll">
+                <span class="text-emerald-500 font-bold tracking-widest text-xs uppercase mb-4 block">How We Work</span>
+                <h2 class="text-4xl font-display font-semibold text-neutral-900 dark:text-white">From Concept to Launch</h2>
+            </div>
+            
+            <div class="relative grid md:grid-cols-4 gap-8">
+                <!-- Connecting Line -->
+                <div class="hidden md:block absolute top-12 left-0 w-full h-0.5 bg-gradient-to-r from-emerald-500/0 via-emerald-500/50 to-emerald-500/0"></div>
+                
+                <div class="relative pt-8 text-center md:text-left reveal-on-scroll delay-100">
+                    <div class="w-8 h-8 rounded-full bg-neutral-900 dark:bg-white text-white dark:text-black flex items-center justify-center text-sm font-bold mb-6 mx-auto md:mx-0 relative z-10 shadow-[0_0_20px_rgba(0,0,0,0.1)] dark:shadow-[0_0_20px_rgba(255,255,255,0.2)]">1</div>
+                    <h3 class="text-xl font-bold text-neutral-900 dark:text-white mb-3">Discovery</h3>
+                    <p class="text-sm text-neutral-500 dark:text-white/60">We meet to understand your business goals, target audience in Ethiopia, and technical requirements.</p>
+                </div>
+                 <div class="relative pt-8 text-center md:text-left reveal-on-scroll delay-200">
+                    <div class="w-8 h-8 rounded-full bg-neutral-900 dark:bg-white text-white dark:text-black flex items-center justify-center text-sm font-bold mb-6 mx-auto md:mx-0 relative z-10 shadow-[0_0_20px_rgba(0,0,0,0.1)] dark:shadow-[0_0_20px_rgba(255,255,255,0.2)]">2</div>
+                    <h3 class="text-xl font-bold text-neutral-900 dark:text-white mb-3">Design</h3>
+                    <p class="text-sm text-neutral-500 dark:text-white/60">We create wireframes and high-fidelity mockups using Figma, focusing on user experience and brand identity.</p>
+                </div>
+                 <div class="relative pt-8 text-center md:text-left reveal-on-scroll delay-300">
+                    <div class="w-8 h-8 rounded-full bg-neutral-900 dark:bg-white text-white dark:text-black flex items-center justify-center text-sm font-bold mb-6 mx-auto md:mx-0 relative z-10 shadow-[0_0_20px_rgba(0,0,0,0.1)] dark:shadow-[0_0_20px_rgba(255,255,255,0.2)]">3</div>
+                    <h3 class="text-xl font-bold text-neutral-900 dark:text-white mb-3">Development</h3>
+                    <p class="text-sm text-neutral-500 dark:text-white/60">Our engineers build the solution using clean code, ensuring security, speed, and scalability.</p>
+                </div>
+                 <div class="relative pt-8 text-center md:text-left reveal-on-scroll delay-400">
+                    <div class="w-8 h-8 rounded-full bg-emerald-500 text-white flex items-center justify-center text-sm font-bold mb-6 mx-auto md:mx-0 relative z-10 shadow-[0_0_20px_rgba(16,185,129,0.4)]">4</div>
+                    <h3 class="text-xl font-bold text-neutral-900 dark:text-white mb-3">Launch</h3>
+                    <p class="text-sm text-neutral-500 dark:text-white/60">We deploy your site, provide training, and offer ongoing support to ensure long-term success.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="py-32 px-6 bg-neutral-50 dark:bg-white/5 border-b border-neutral-200 dark:border-white/5">
+        <div class="max-w-7xl mx-auto">
+            <h2 class="text-3xl font-display font-semibold text-center mb-16 text-neutral-900 dark:text-white reveal-on-scroll">Trusted by Local Businesses</h2>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="p-8 rounded-2xl bg-white dark:bg-black border border-neutral-100 dark:border-white/10 reveal-on-scroll transition-transform duration-300 hover:-translate-y-1">
+                    <div class="flex gap-1 text-emerald-500 mb-4">
+                        <svg class="w-4 h-4 fill-current" data-lucide="star"></svg><svg class="w-4 h-4 fill-current" data-lucide="star"></svg><svg class="w-4 h-4 fill-current" data-lucide="star"></svg><svg class="w-4 h-4 fill-current" data-lucide="star"></svg><svg class="w-4 h-4 fill-current" data-lucide="star"></svg>
+                    </div>
+                    <p class="text-lg text-neutral-700 dark:text-white/80 italic mb-6">"Ethiowebagency transformed our hotel's online presence. Our direct bookings have increased by 40% since the new website launch."</p>
+                    <div class="flex items-center gap-4">
+                        <div class="w-10 h-10 rounded-full bg-neutral-200 dark:bg-white/20 flex items-center justify-center font-bold text-neutral-600 dark:text-white">YK</div>
+                        <div>
+                            <div class="font-bold text-neutral-900 dark:text-white">Yonas Kassa</div>
+                            <div class="text-xs text-neutral-500">Manager, Lalibela Heights</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-8 rounded-2xl bg-white dark:bg-black border border-neutral-100 dark:border-white/10 reveal-on-scroll delay-100 transition-transform duration-300 hover:-translate-y-1">
+                    <div class="flex gap-1 text-emerald-500 mb-4">
+                        <svg class="w-4 h-4 fill-current" data-lucide="star"></svg><svg class="w-4 h-4 fill-current" data-lucide="star"></svg><svg class="w-4 h-4 fill-current" data-lucide="star"></svg><svg class="w-4 h-4 fill-current" data-lucide="star"></svg><svg class="w-4 h-4 fill-current" data-lucide="star"></svg>
+                    </div>
+                    <p class="text-lg text-neutral-700 dark:text-white/80 italic mb-6">"Professional, timely, and technically skilled. They built a custom real estate portal that handles thousands of listings seamlessly."</p>
+                    <div class="flex items-center gap-4">
+                        <div class="w-10 h-10 rounded-full bg-neutral-200 dark:bg-white/20 flex items-center justify-center font-bold text-neutral-600 dark:text-white">SA</div>
+                        <div>
+                            <div class="font-bold text-neutral-900 dark:text-white">Selamawit Alemu</div>
+                            <div class="text-xs text-neutral-500">CEO, Grand Horizon Properties</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="py-32 px-6 max-w-4xl mx-auto text-center">
+      <div class="reveal-on-scroll">
+        <h2 class="text-5xl sm:text-7xl font-display font-semibold text-neutral-900 dark:text-white mb-8 tracking-tight">Ready to Digitise?</h2>
+        <p class="text-xl text-neutral-600 dark:text-white/60 mb-12 max-w-2xl mx-auto">We are currently accepting new projects for the upcoming quarter. Let's discuss how we can help your business grow.</p>
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+             <a href="contact.html" class="w-full sm:w-auto inline-flex items-center justify-center bg-emerald-600 text-white h-16 px-12 rounded-full text-lg font-semibold shadow-lg shadow-emerald-500/30 transition-all duration-300 hover:bg-emerald-500 hover:scale-[1.03] active:scale-[0.98]">
+              Get a Free Quote
+            </a>
+            <a href="tel:+251911000000" class="w-full sm:w-auto inline-flex items-center justify-center bg-transparent border border-neutral-300 dark:border-white/20 text-neutral-900 dark:text-white h-16 px-12 rounded-full text-lg font-semibold hover:bg-neutral-100 dark:hover:bg-white/10 transition-colors duration-300">
+              <svg class="w-5 h-5 mr-2" data-lucide="phone"></svg> Call Us
+            </a>
+        </div>
+      </div>
+    </section>
+  </div>
+</main>
+
+<!-- Footer -->
+<footer class="border-t border-neutral-200 dark:border-white/10 bg-white dark:bg-black py-20 relative z-10">
+  <div class="max-w-7xl mx-auto px-6 grid gap-12 md:grid-cols-4">
+    <div class="md:col-span-2">
+      <div class="flex items-center gap-2 mb-6">
+        <span class="text-2xl font-bold tracking-tight text-neutral-900 dark:text-white font-display">Ethio<span class="text-emerald-500">web</span>agency</span>
+      </div>
+      <p class="text-sm text-neutral-500 dark:text-white/50 max-w-sm leading-relaxed mb-8">The premier web development agency for Ethiopia's hospitality, real estate, and education sectors. Located Debre Zeyit, Ethiopia.</p>
+      <div class="flex gap-4">
+        <a href="#" class="w-10 h-10 rounded-full bg-neutral-100 dark:bg-white/10 flex items-center justify-center text-neutral-600 dark:text-white/60 hover:bg-emerald-500 hover:text-white transition-all duration-300 hover:-translate-y-1"><svg class="w-5 h-5" data-lucide="facebook"></svg></a>
+        <a href="#" class="w-10 h-10 rounded-full bg-neutral-100 dark:bg-white/10 flex items-center justify-center text-neutral-600 dark:text-white/60 hover:bg-emerald-500 hover:text-white transition-all duration-300 hover:-translate-y-1"><svg class="w-5 h-5" data-lucide="twitter"></svg></a>
+        <a href="#" class="w-10 h-10 rounded-full bg-neutral-100 dark:bg-white/10 flex items-center justify-center text-neutral-600 dark:text-white/60 hover:bg-emerald-500 hover:text-white transition-all duration-300 hover:-translate-y-1"><svg class="w-5 h-5" data-lucide="linkedin"></svg></a>
+        <a href="#" class="w-10 h-10 rounded-full bg-neutral-100 dark:bg-white/10 flex items-center justify-center text-neutral-600 dark:text-white/60 hover:bg-emerald-500 hover:text-white transition-all duration-300 hover:-translate-y-1"><svg class="w-5 h-5" data-lucide="instagram"></svg></a>
+      </div>
+    </div>
+    <div>
+      <h4 class="text-sm font-bold text-neutral-900 dark:text-white mb-6 uppercase tracking-wider">Company</h4>
+      <ul class="space-y-3 text-sm text-neutral-500 dark:text-white/60">
+        <li><a href="index.html" class="hover:text-emerald-500 transition-colors">Home</a></li>
+        <li><a href="services.html" class="hover:text-emerald-500 transition-colors">Services</a></li>
+        <li><a href="portfolio.html" class="hover:text-emerald-500 transition-colors">Portfolio</a></li>
+        <li><a href="team.html" class="hover:text-emerald-500 transition-colors">Team</a></li>
+        <li><a href="contact.html" class="hover:text-emerald-500 transition-colors">Contact</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4 class="text-sm font-bold text-neutral-900 dark:text-white mb-6 uppercase tracking-wider">Services</h4>
+      <ul class="space-y-3 text-sm text-neutral-500 dark:text-white/60">
+        <li><a href="services.html" class="hover:text-emerald-500 transition-colors">Web Development</a></li>
+        <li><a href="services.html" class="hover:text-emerald-500 transition-colors">Hotel Booking Engines</a></li>
+        <li><a href="services.html" class="hover:text-emerald-500 transition-colors">Real Estate Platforms</a></li>
+        <li><a href="services.html" class="hover:text-emerald-500 transition-colors">E-Commerce</a></li>
+        <li><a href="services.html" class="hover:text-emerald-500 transition-colors">SEO &amp; Marketing</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="max-w-7xl mx-auto px-6 mt-16 pt-8 border-t border-neutral-200 dark:border-white/10 flex flex-col md:flex-row justify-between items-center gap-4">
+    <p class="text-xs text-center text-neutral-400 dark:text-white/30">© 2026 Ethiowebagency. All rights reserved.</p>
+    <div class="flex gap-6">
+        <a href="#" class="text-xs text-neutral-400 hover:text-white transition-colors">Privacy Policy</a>
+        <a href="#" class="text-xs text-neutral-400 hover:text-white transition-colors">Terms of Service</a>
+    </div>
+  </div>
+</footer>
+
+<!-- Scroll to Top Button -->
+<button id="scrollToTopBtn" class="fixed bottom-6 right-6 z-50 p-3 rounded-full bg-neutral-900 dark:bg-emerald-500 text-white dark:text-white shadow-xl translate-y-20 opacity-0 transition-all duration-500 hover:-translate-y-1 hover:shadow-2xl focus:outline-none" aria-label="Scroll to top">
+  <svg data-lucide="arrow-up" class="w-5 h-5"></svg>
+</button>
+
+<script src="scripts.js"></script>
+
+</body></html>
